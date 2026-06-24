@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>leo2991 | 個人介紹</title>
+    <meta name="description" content="leo2991 的個人介紹頁，包含專長、作品與聯絡方式。" />
+    <meta property="og:title" content="leo2991 | 個人介紹" />
+    <meta property="og:description" content="一個簡潔、可直接開啟的個人介紹頁。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://avatars.githubusercontent.com/u/5340245?v=4" />
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f8f3eb;
+        --paper-strong: #fffaf2;
+        --ink: #20242a;
+        --muted: #626b74;
+        --line: #ddd5c9;
+        --teal: #0f6f72;
+        --teal-dark: #094f52;
+        --coral: #e66d55;
+        --moss: #748c5d;
+        --gold: #c8932e;
+        --shadow: 0 24px 70px rgba(32, 36, 42, 0.14);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        background:
+          linear-gradient(135deg, rgba(15, 111, 114, 0.12), transparent 30rem),
+          linear-gradient(315deg, rgba(230, 109, 85, 0.11), transparent 32rem),
+          var(--paper);
+        color: var(--ink);
+        font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.7;
+      }
+
+      a { color: inherit; text-decoration: none; }
+      img { display: block; max-width: 100%; }
+      h1, h2, h3, p { overflow-wrap: anywhere; }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        padding: 1rem clamp(1rem, 5vw, 4rem);
+        border-bottom: 1px solid rgba(221, 213, 201, 0.72);
+        background: rgba(248, 243, 235, 0.9);
+        backdrop-filter: blur(16px);
+      }
+
+      .brand { color: var(--teal-dark); font-weight: 900; }
+
+      .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: clamp(0.65rem, 2vw, 1.5rem);
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .nav-links a { border-bottom: 2px solid transparent; }
+      .nav-links a:hover, .nav-links a:focus-visible { border-color: var(--coral); color: var(--ink); }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.02fr) minmax(18rem, 0.78fr);
+        align-items: center;
+        gap: clamp(2rem, 7vw, 5rem);
+        min-height: calc(88svh - 4.5rem);
+        padding: clamp(2.5rem, 5vw, 4.5rem) clamp(1rem, 5vw, 4rem) 2rem;
+      }
+
+      .hero-copy { max-width: 47rem; }
+      .eyebrow, .section-kicker, .project-type {
+        margin: 0 0 0.85rem;
+        color: var(--coral);
+        font-size: 0.78rem;
+        font-weight: 900;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 12ch;
+        margin: 0;
+        font-size: clamp(3rem, 9vw, 6.4rem);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 42rem;
+        margin: 1.5rem 0 0;
+        color: #3f4850;
+        font-size: clamp(1.08rem, 2vw, 1.35rem);
+      }
+
+      .hero-actions, .contact-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.85rem;
+        margin-top: 2rem;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 3rem;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 0.75rem 1.15rem;
+        font-weight: 900;
+        transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+      }
+
+      .button:hover, .button:focus-visible { transform: translateY(-2px); }
+      .button.primary { background: var(--teal-dark); box-shadow: 0 12px 32px rgba(9, 79, 82, 0.23); color: white; }
+      .button.secondary { border-color: var(--line); background: rgba(255, 250, 242, 0.76); color: var(--ink); }
+
+      .profile-media { position: relative; margin: 0; }
+      .profile-media::before {
+        position: absolute;
+        inset: 1.25rem -1.25rem -1.25rem 1.25rem;
+        z-index: -1;
+        border: 1px solid rgba(15, 111, 114, 0.22);
+        border-radius: 8px;
+        content: "";
+      }
+
+      .profile-media img {
+        width: min(100%, 26rem);
+        margin-left: auto;
+        border: 1px solid rgba(221, 213, 201, 0.8);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        aspect-ratio: 4 / 5;
+        object-fit: cover;
+      }
+
+      .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1px;
+        margin: 0 clamp(1rem, 5vw, 4rem);
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--line);
+      }
+
+      .quick-stats article {
+        min-height: 8rem;
+        padding: clamp(1.25rem, 3vw, 2rem);
+        background: rgba(255, 250, 242, 0.8);
+      }
+
+      .stat-number { display: block; color: var(--teal-dark); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 950; line-height: 1; }
+      .stat-label { display: block; margin-top: 0.5rem; color: var(--muted); font-weight: 800; }
+
+      .section { padding: clamp(4.5rem, 9vw, 7rem) clamp(1rem, 5vw, 4rem); }
+      .about-grid { display: grid; grid-template-columns: minmax(12rem, 0.72fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 5rem); }
+      .section-heading { max-width: 42rem; margin-bottom: 2rem; }
+
+      h2 { margin: 0; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.14; letter-spacing: 0; }
+      h3 { margin: 0; font-size: 1.22rem; line-height: 1.35; }
+
+      .about-copy { display: grid; gap: 1rem; color: #424b54; font-size: 1.08rem; }
+      .about-copy p, .card p, .project-card p, .timeline p { margin: 0; }
+
+      .skill-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+      .card, .project-card {
+        border: 1px solid rgba(221, 213, 201, 0.9);
+        border-radius: 8px;
+        background: rgba(255, 250, 242, 0.78);
+        box-shadow: 0 16px 45px rgba(32, 36, 42, 0.07);
+      }
+
+      .card { display: grid; align-content: start; min-height: 12rem; gap: 1rem; padding: 1.35rem; }
+      .card:nth-child(2) { border-top: 4px solid var(--coral); }
+      .card:nth-child(3) { border-top: 4px solid var(--moss); }
+      .card:nth-child(4) { border-top: 4px solid var(--gold); }
+
+      .project-section { background: #20242a; color: #fffaf2; }
+      .project-section .section-kicker { color: #ffb19f; }
+      .project-list { display: grid; gap: 1rem; }
+      .project-card { display: grid; grid-template-columns: minmax(11rem, 0.45fr) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); padding: clamp(1.25rem, 3vw, 2rem); background: #2b3037; border-color: rgba(255, 250, 242, 0.12); }
+      .project-card p { color: #d7d1c7; }
+      .project-type { color: #8bd1c5; }
+
+      .timeline { display: grid; gap: 1rem; max-width: 64rem; }
+      .timeline article { display: grid; grid-template-columns: 6rem minmax(0, 1fr); gap: 1.25rem; padding: 1.25rem 0; border-bottom: 1px solid var(--line); }
+      .timeline time { color: var(--teal-dark); font-weight: 950; }
+      .timeline p { margin-top: 0.4rem; color: var(--muted); }
+
+      .contact-band {
+        margin: 0 clamp(1rem, 5vw, 4rem) clamp(3rem, 7vw, 5rem);
+        border-radius: 8px;
+        background: linear-gradient(135deg, rgba(116, 140, 93, 0.22), transparent 55%), var(--paper-strong);
+        padding: clamp(2rem, 6vw, 4rem);
+        border: 1px solid var(--line);
+      }
+
+      .contact-band h2 { max-width: 48rem; }
+      .site-footer { display: flex; justify-content: space-between; gap: 1rem; padding: 1.5rem clamp(1rem, 5vw, 4rem) 2rem; color: var(--muted); font-size: 0.95rem; }
+      .site-footer a { color: var(--teal-dark); font-weight: 900; }
+
+      @media (max-width: 920px) {
+        .hero, .about-grid, .project-card { grid-template-columns: 1fr; }
+        .hero { min-height: auto; }
+        .profile-media img { width: min(100%, 26rem); margin-inline: 0; }
+        .skill-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
+      @media (max-width: 640px) {
+        .site-header { align-items: flex-start; flex-direction: column; }
+        .nav-links { justify-content: flex-start; }
+        .hero { gap: 1rem; padding-top: 1.5rem; padding-bottom: 1rem; }
+        h1 { font-size: clamp(2.7rem, 15vw, 4rem); }
+        .profile-media::before { inset: 0.75rem -0.75rem -0.75rem 0.75rem; }
+        .profile-media img { width: 100%; max-height: 11rem; aspect-ratio: 16 / 7; object-position: center; }
+        .quick-stats, .skill-grid { grid-template-columns: 1fr; }
+        .quick-stats article { min-height: 7rem; }
+        .timeline article { grid-template-columns: 1fr; }
+        .site-footer { flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header" aria-label="主要導覽">
+      <a class="brand" href="#top">leo2991</a>
+      <nav class="nav-links" aria-label="頁面區段">
+        <a href="#about">關於</a>
+        <a href="#projects">作品</a>
+        <a href="#experience">經歷</a>
+        <a href="#contact">聯絡</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="intro-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Taipei / GitHub Pages</p>
+          <h1 id="intro-title">你好，我是 leo2991。</h1>
+          <p class="lead">我喜歡把想法整理成清楚、可靠、好使用的數位體驗。這裡整理了我的專長方向、近期作品與聯絡入口。</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#projects">看作品</a>
+            <a class="button secondary" href="https://github.com/leo2991">GitHub</a>
+          </div>
+        </div>
+
+        <figure class="profile-media">
+          <img src="https://avatars.githubusercontent.com/u/5340245?v=4" alt="leo2991 的 GitHub 頭像" />
+        </figure>
+      </section>
+
+      <section class="quick-stats" aria-label="重點摘要">
+        <article><span class="stat-number">3+</span><span class="stat-label">專案經驗</span></article>
+        <article><span class="stat-number">12</span><span class="stat-label">完成作品</span></article>
+        <article><span class="stat-number">4</span><span class="stat-label">核心專長</span></article>
+      </section>
+
+      <section id="about" class="section about-grid" aria-labelledby="about-title">
+        <div>
+          <p class="section-kicker">About</p>
+          <h2 id="about-title">我喜歡把複雜的事變得好理解。</h2>
+        </div>
+        <div class="about-copy">
+          <p>我關注產品、資料、網站與工具之間的連結，習慣先釐清問題，再把資訊整理成能被閱讀、操作與維護的形式。</p>
+          <p>這個頁面是 GitHub Pages 上的靜態網站，可以持續擴充作品、履歷、筆記或任何想公開分享的內容。</p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="skills-title">
+        <div class="section-heading">
+          <p class="section-kicker">Skills</p>
+          <h2 id="skills-title">專長領域</h2>
+        </div>
+        <div class="skill-grid">
+          <article class="card"><h3>資料整理</h3><p>把分散資訊轉成可閱讀、可查找、可更新的結構。</p></article>
+          <article class="card"><h3>網頁製作</h3><p>建立快速、清楚、響應式的靜態頁面與內容網站。</p></article>
+          <article class="card"><h3>工具思維</h3><p>用簡潔的流程降低重複工作，讓任務推進更順。</p></article>
+          <article class="card"><h3>內容表達</h3><p>把想法、專案與技術重點整理成容易理解的文字。</p></article>
+        </div>
+      </section>
+
+      <section id="projects" class="section project-section" aria-labelledby="projects-title">
+        <div class="section-heading">
+          <p class="section-kicker">Selected Work</p>
+          <h2 id="projects-title">近期作品</h2>
+        </div>
+        <div class="project-list">
+          <article class="project-card"><div><p class="project-type">Website</p><h3>個人介紹頁</h3></div><p>建立一頁式個人介紹頁，整合簡介、作品、技能與聯絡方式，並部署到 GitHub Pages。</p></article>
+          <article class="project-card"><div><p class="project-type">Repository</p><h3>GitHub 專案整理</h3></div><p>用公開 repo 保存作品、練習與筆記，讓專案紀錄可以長期累積。</p></article>
+          <article class="project-card"><div><p class="project-type">Learning</p><h3>技術與資料練習</h3></div><p>持續整理程式、資料庫、網頁與 AI 工具相關的學習成果。</p></article>
+        </div>
+      </section>
+
+      <section id="experience" class="section timeline-section" aria-labelledby="experience-title">
+        <div class="section-heading">
+          <p class="section-kicker">Experience</p>
+          <h2 id="experience-title">經歷節點</h2>
+        </div>
+        <div class="timeline">
+          <article><time datetime="2026">2026</time><div><h3>個人頁部署</h3><p>建立 GitHub Pages 個人介紹頁，作為作品與公開資訊的入口。</p></div></article>
+          <article><time datetime="2025">2025</time><div><h3>專案與工具累積</h3><p>持續整理網站、資料、程式與自動化相關的專案經驗。</p></div></article>
+          <article><time datetime="2024">2024</time><div><h3>學習與實作</h3><p>累積 HTML、CSS、GitHub 與網頁部署的基礎。</p></div></article>
+        </div>
+      </section>
+
+      <section id="contact" class="contact-band" aria-labelledby="contact-title">
+        <p class="section-kicker">Contact</p>
+        <h2 id="contact-title">想看更多作品或進一步交流，可以從 GitHub 開始。</h2>
+        <div class="contact-actions">
+          <a class="button primary" href="https://github.com/leo2991">github.com/leo2991</a>
+          <a class="button secondary" href="https://github.com/leo2991/leo2991.github.io">Pages Repo</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>© 2026 leo2991</span>
+      <a href="#top">回到上方</a>
+    </footer>
+  </body>
+</html>
