@@ -4,60 +4,424 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>抽獎頁範本</title>
-  <meta name="description" content="從 GitHub Excel 名單讀取資料的抽獎頁範本。" />
+  <meta name="description" content="使用者上傳 Excel 或 CSV 名單後，由瀏覽器本機讀取資料的抽獎頁範本。" />
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <style>
-    :root{--bg:#f6f1e8;--card:#fffaf2;--ink:#20242a;--muted:#65717b;--line:#ddd4c5;--teal:#084f52;--teal2:#0f6f72;--coral:#df6b50;--gold:#c8942e;--danger:#b43f35;--shadow:0 22px 68px rgba(30,35,41,.13)}
-    *{box-sizing:border-box}body{margin:0;min-height:100svh;background:linear-gradient(135deg,rgba(15,111,114,.14),transparent 28rem),linear-gradient(315deg,rgba(223,107,80,.13),transparent 30rem),var(--bg);color:var(--ink);font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}button,input{font:inherit}button{cursor:pointer}.wrap{width:min(1160px,calc(100% - 2rem));margin:0 auto;padding:clamp(1rem,4vw,3rem) 0 3rem}.top{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.4rem}.brand{display:grid;gap:.15rem}.brand strong{color:var(--teal);font-size:clamp(1.15rem,2vw,1.45rem);font-weight:900}.brand span,.pill,.hint{color:var(--muted);font-size:.94rem}.pill{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--line);border-radius:999px;background:rgba(255,250,242,.78);padding:.45rem .75rem}.dot{width:.65rem;height:.65rem;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(200,148,46,.15)}.dot.ready{background:var(--teal2);box-shadow:0 0 0 4px rgba(15,111,114,.15)}.dot.error{background:var(--danger);box-shadow:0 0 0 4px rgba(180,63,53,.14)}.grid{display:grid;grid-template-columns:minmax(18rem,.82fr) minmax(0,1.18fr);gap:clamp(1rem,4vw,2rem);align-items:start}.panel,.stage,.history{border:1px solid rgba(221,212,197,.92);border-radius:8px;background:rgba(255,250,242,.9);box-shadow:0 16px 45px rgba(30,35,41,.07)}.panel{display:grid;gap:1rem;padding:clamp(1.15rem,3vw,1.6rem)}.eyebrow,.kicker{margin:0 0 .7rem;color:var(--coral);font-size:.78rem;font-weight:900;text-transform:uppercase;letter-spacing:0}h1,h2,h3,p{overflow-wrap:anywhere}h1{margin:0;font-size:clamp(2.35rem,6vw,4.8rem);line-height:1;letter-spacing:0}h2{margin:0;font-size:clamp(1.45rem,3vw,2rem);line-height:1.15;letter-spacing:0}.lead{margin:0;color:#3f4951}.status{display:grid;gap:.35rem;border:1px dashed rgba(15,111,114,.35);border-radius:8px;background:rgba(15,111,114,.06);padding:.85rem}.status strong{color:var(--teal)}label{display:grid;gap:.35rem;color:var(--muted);font-size:.92rem;font-weight:800}input{width:100%;min-height:3rem;border:1px solid var(--line);border-radius:8px;background:white;color:var(--ink);padding:.75rem .85rem;outline:none}input:focus{border-color:var(--teal2);box-shadow:0 0 0 4px rgba(15,111,114,.13)}.source{display:none;gap:.75rem}.source.show{display:grid}.fields{display:grid;grid-template-columns:1fr minmax(8rem,.45fr);gap:.85rem}.actions{display:flex;flex-wrap:wrap;gap:.75rem}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:3rem;border:1px solid transparent;border-radius:8px;padding:.76rem 1.05rem;font-weight:900;transition:transform .16s ease,box-shadow .16s ease}.btn:hover,.btn:focus-visible{transform:translateY(-2px)}.btn.primary{background:var(--teal);box-shadow:0 14px 30px rgba(8,79,82,.22);color:white}.btn.secondary{border-color:var(--line);background:rgba(255,255,255,.6);color:var(--ink)}.btn.warning{border-color:rgba(180,63,53,.28);background:rgba(180,63,53,.08);color:var(--danger)}.btn:disabled{cursor:not-allowed;opacity:.5;transform:none}.stage{position:relative;overflow:hidden;min-height:33rem;padding:clamp(1.15rem,3vw,1.8rem)}.stage:before{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 12% 16%,rgba(223,107,80,.16),transparent 15rem),radial-gradient(circle at 85% 20%,rgba(200,148,46,.16),transparent 16rem),radial-gradient(circle at 72% 84%,rgba(15,111,114,.13),transparent 17rem);content:""}.stage-head,.winners,.empty{position:relative}.stage-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.2rem}.prize{display:inline-flex;max-width:18rem;align-items:center;border:1px solid rgba(200,148,46,.35);border-radius:999px;background:rgba(255,255,255,.58);color:#775b1e;padding:.45rem .75rem;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.winners{display:grid;gap:.85rem}.winner{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:.9rem;border:1px solid rgba(221,212,197,.95);border-radius:8px;background:rgba(255,255,255,.76);padding:.95rem;animation:rise .34s ease both}.rank{display:grid;width:2.5rem;height:2.5rem;place-items:center;border-radius:50%;background:var(--teal);color:white;font-weight:950}.winner strong{display:block;font-size:clamp(1.12rem,2vw,1.35rem);line-height:1.25}.meta{color:var(--muted);font-size:.92rem}.empty{display:grid;min-height:24rem;place-items:center;text-align:center}.empty>div{max-width:25rem}.ticket{display:grid;width:min(100%,19rem);height:9rem;margin:0 auto 1.25rem;place-items:center;border:1px solid rgba(15,111,114,.2);border-radius:8px;background:linear-gradient(90deg,transparent 1rem,rgba(255,255,255,.45) 1rem 1.15rem,transparent 1.15rem),repeating-linear-gradient(135deg,rgba(15,111,114,.12) 0 .75rem,rgba(223,107,80,.11) .75rem 1.5rem),var(--card);box-shadow:inset 0 0 0 .6rem rgba(255,255,255,.35);color:var(--teal);font-size:2.8rem;font-weight:950}.history{grid-column:1/-1;padding:clamp(1.15rem,3vw,1.6rem)}.history-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}.history-list{display:grid;gap:.75rem}.history-item{display:grid;grid-template-columns:minmax(8rem,.28fr) minmax(0,1fr);gap:1rem;border-top:1px solid var(--line);padding-top:.75rem}.history-item strong{color:var(--teal)}.toast{position:fixed;right:1rem;bottom:1rem;z-index:20;max-width:min(24rem,calc(100% - 2rem));border:1px solid rgba(8,79,82,.18);border-radius:8px;background:white;box-shadow:var(--shadow);padding:.85rem 1rem;transform:translateY(140%);transition:transform .22s ease}.toast.show{transform:translateY(0)}canvas{position:fixed;inset:0;z-index:15;pointer-events:none}@keyframes rise{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}@media(max-width:900px){.grid{grid-template-columns:1fr}.stage{min-height:28rem}}@media(max-width:620px){.top,.stage-head,.history-head{align-items:flex-start;flex-direction:column}.pill{white-space:normal}.fields,.history-item{grid-template-columns:1fr}.btn{width:100%}h1{font-size:clamp(2.4rem,14vw,3.7rem)}}
+    :root{
+      --bg:#f6f1e8;
+      --card:#fffaf2;
+      --ink:#20242a;
+      --muted:#65717b;
+      --line:#ddd4c5;
+      --teal:#084f52;
+      --teal2:#0f6f72;
+      --coral:#df6b50;
+      --gold:#c8942e;
+      --danger:#b43f35;
+      --shadow:0 22px 68px rgba(30,35,41,.13);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100svh;
+      background:
+        linear-gradient(135deg,rgba(15,111,114,.14),transparent 28rem),
+        linear-gradient(315deg,rgba(223,107,80,.13),transparent 30rem),
+        var(--bg);
+      color:var(--ink);
+      font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.65;
+    }
+    button,input{font:inherit}
+    button{cursor:pointer}
+    .wrap{
+      width:min(1160px,calc(100% - 2rem));
+      margin:0 auto;
+      padding:clamp(1rem,4vw,3rem) 0 3rem;
+    }
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      margin-bottom:1.4rem;
+    }
+    .brand{display:grid;gap:.15rem}
+    .brand strong{
+      color:var(--teal);
+      font-size:clamp(1.15rem,2vw,1.45rem);
+      font-weight:900;
+    }
+    .brand span,.pill,.hint{color:var(--muted);font-size:.94rem}
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,250,242,.78);
+      padding:.45rem .75rem;
+    }
+    .dot{
+      width:.65rem;
+      height:.65rem;
+      border-radius:50%;
+      background:var(--gold);
+      box-shadow:0 0 0 4px rgba(200,148,46,.15);
+    }
+    .dot.ready{background:var(--teal2);box-shadow:0 0 0 4px rgba(15,111,114,.15)}
+    .dot.error{background:var(--danger);box-shadow:0 0 0 4px rgba(180,63,53,.14)}
+    .grid{
+      display:grid;
+      grid-template-columns:minmax(18rem,.82fr) minmax(0,1.18fr);
+      gap:clamp(1rem,4vw,2rem);
+      align-items:start;
+    }
+    .panel,.stage,.history{
+      border:1px solid rgba(221,212,197,.92);
+      border-radius:8px;
+      background:rgba(255,250,242,.9);
+      box-shadow:0 16px 45px rgba(30,35,41,.07);
+    }
+    .panel{
+      display:grid;
+      gap:1rem;
+      padding:clamp(1.15rem,3vw,1.6rem);
+    }
+    .eyebrow,.kicker{
+      margin:0 0 .7rem;
+      color:var(--coral);
+      font-size:.78rem;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:0;
+    }
+    h1,h2,h3,p{overflow-wrap:anywhere}
+    h1{
+      margin:0;
+      font-size:clamp(2.35rem,6vw,4.8rem);
+      line-height:1;
+      letter-spacing:0;
+    }
+    h2{
+      margin:0;
+      font-size:clamp(1.45rem,3vw,2rem);
+      line-height:1.15;
+      letter-spacing:0;
+    }
+    .lead{margin:0;color:#3f4951}
+    .status{
+      display:grid;
+      gap:.35rem;
+      border:1px dashed rgba(15,111,114,.35);
+      border-radius:8px;
+      background:rgba(15,111,114,.06);
+      padding:.85rem;
+    }
+    .status strong{color:var(--teal)}
+    label{
+      display:grid;
+      gap:.35rem;
+      color:var(--muted);
+      font-size:.92rem;
+      font-weight:800;
+    }
+    input{
+      width:100%;
+      min-height:3rem;
+      border:1px solid var(--line);
+      border-radius:8px;
+      background:white;
+      color:var(--ink);
+      padding:.75rem .85rem;
+      outline:none;
+    }
+    input:focus{
+      border-color:var(--teal2);
+      box-shadow:0 0 0 4px rgba(15,111,114,.13);
+    }
+    input[type="file"]{padding:.65rem;background:#fff}
+    .source{display:grid;gap:.75rem}
+    .fields{
+      display:grid;
+      grid-template-columns:1fr minmax(8rem,.45fr);
+      gap:.85rem;
+    }
+    .actions{display:flex;flex-wrap:wrap;gap:.75rem}
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:3rem;
+      border:1px solid transparent;
+      border-radius:8px;
+      padding:.76rem 1.05rem;
+      font-weight:900;
+      transition:transform .16s ease,box-shadow .16s ease;
+    }
+    .btn:hover,.btn:focus-visible{transform:translateY(-2px)}
+    .btn.primary{
+      background:var(--teal);
+      box-shadow:0 14px 30px rgba(8,79,82,.22);
+      color:white;
+    }
+    .btn.secondary{
+      border-color:var(--line);
+      background:rgba(255,255,255,.6);
+      color:var(--ink);
+    }
+    .btn.warning{
+      border-color:rgba(180,63,53,.28);
+      background:rgba(180,63,53,.08);
+      color:var(--danger);
+    }
+    .btn:disabled{cursor:not-allowed;opacity:.5;transform:none}
+    .stage{
+      position:relative;
+      overflow:hidden;
+      min-height:33rem;
+      padding:clamp(1.15rem,3vw,1.8rem);
+    }
+    .stage:before{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 12% 16%,rgba(223,107,80,.16),transparent 15rem),
+        radial-gradient(circle at 85% 20%,rgba(200,148,46,.16),transparent 16rem),
+        radial-gradient(circle at 72% 84%,rgba(15,111,114,.13),transparent 17rem);
+      content:"";
+    }
+    .stage-head,.winners,.empty{position:relative}
+    .stage-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:1rem;
+      margin-bottom:1.2rem;
+    }
+    .prize{
+      display:inline-flex;
+      max-width:18rem;
+      align-items:center;
+      border:1px solid rgba(200,148,46,.35);
+      border-radius:999px;
+      background:rgba(255,255,255,.58);
+      color:#775b1e;
+      padding:.45rem .75rem;
+      font-weight:900;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .winners{display:grid;gap:.85rem}
+    .winner{
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr);
+      align-items:center;
+      gap:.9rem;
+      border:1px solid rgba(221,212,197,.95);
+      border-radius:8px;
+      background:rgba(255,255,255,.76);
+      padding:.95rem;
+      animation:rise .34s ease both;
+    }
+    .rank{
+      display:grid;
+      width:2.5rem;
+      height:2.5rem;
+      place-items:center;
+      border-radius:50%;
+      background:var(--teal);
+      color:white;
+      font-weight:950;
+    }
+    .winner strong{
+      display:block;
+      font-size:clamp(1.12rem,2vw,1.35rem);
+      line-height:1.25;
+    }
+    .meta{color:var(--muted);font-size:.92rem}
+    .empty{
+      display:grid;
+      min-height:24rem;
+      place-items:center;
+      text-align:center;
+    }
+    .empty>div{max-width:25rem}
+    .ticket{
+      display:grid;
+      width:min(100%,19rem);
+      height:9rem;
+      margin:0 auto 1.25rem;
+      place-items:center;
+      border:1px solid rgba(15,111,114,.2);
+      border-radius:8px;
+      background:
+        linear-gradient(90deg,transparent 1rem,rgba(255,255,255,.45) 1rem 1.15rem,transparent 1.15rem),
+        repeating-linear-gradient(135deg,rgba(15,111,114,.12) 0 .75rem,rgba(223,107,80,.11) .75rem 1.5rem),
+        var(--card);
+      box-shadow:inset 0 0 0 .6rem rgba(255,255,255,.35);
+      color:var(--teal);
+      font-size:2.8rem;
+      font-weight:950;
+    }
+    .history{
+      grid-column:1/-1;
+      padding:clamp(1.15rem,3vw,1.6rem);
+    }
+    .history-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      margin-bottom:1rem;
+    }
+    .history-list{display:grid;gap:.75rem}
+    .history-item{
+      display:grid;
+      grid-template-columns:minmax(8rem,.28fr) minmax(0,1fr);
+      gap:1rem;
+      border-top:1px solid var(--line);
+      padding-top:.75rem;
+    }
+    .history-item strong{color:var(--teal)}
+    .toast{
+      position:fixed;
+      right:1rem;
+      bottom:1rem;
+      z-index:20;
+      max-width:min(24rem,calc(100% - 2rem));
+      border:1px solid rgba(8,79,82,.18);
+      border-radius:8px;
+      background:white;
+      box-shadow:var(--shadow);
+      padding:.85rem 1rem;
+      transform:translateY(140%);
+      transition:transform .22s ease;
+    }
+    .toast.show{transform:translateY(0)}
+    canvas{
+      position:fixed;
+      inset:0;
+      z-index:15;
+      pointer-events:none;
+    }
+    @keyframes rise{
+      from{opacity:0;transform:translateY(10px) scale(.98)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+    @media(max-width:900px){
+      .grid{grid-template-columns:1fr}
+      .stage{min-height:28rem}
+    }
+    @media(max-width:620px){
+      .top,.stage-head,.history-head{align-items:flex-start;flex-direction:column}
+      .pill{white-space:normal}
+      .fields,.history-item{grid-template-columns:1fr}
+      .btn{width:100%}
+      h1{font-size:clamp(2.4rem,14vw,3.7rem)}
+    }
   </style>
 </head>
 <body>
   <canvas id="confetti" aria-hidden="true"></canvas>
+
   <div class="wrap">
     <header class="top">
-      <div class="brand"><strong>抽獎頁範本</strong><span>從 GitHub Excel 名單讀取資料</span></div>
-      <div class="pill" aria-live="polite"><span id="dot" class="dot"></span><span id="sourceText">準備載入名單</span></div>
+      <div class="brand">
+        <strong>抽獎頁範本</strong>
+        <span>上傳 Excel / CSV 名單後，由瀏覽器本機讀取資料</span>
+      </div>
+      <div class="pill" aria-live="polite">
+        <span id="dot" class="dot"></span>
+        <span id="sourceText">等待上傳名單</span>
+      </div>
     </header>
+
     <main class="grid">
       <section class="panel" aria-labelledby="title">
-        <div><p class="eyebrow">Lucky Draw</p><h1 id="title">抽獎控制台</h1></div>
-        <p class="lead">輸入獎品名稱和抽取人數，系統會從固定 Excel 名單中隨機抽出得獎者。</p>
-        <div class="status"><strong id="rosterSummary">尚未載入名單</strong><p id="rosterDetail" class="hint">設定 GitHub raw Excel 連結後，頁面會自動讀取第一個工作表。</p></div>
+        <div>
+          <p class="eyebrow">Lucky Draw</p>
+          <h1 id="title">抽獎控制台</h1>
+        </div>
+
+        <p class="lead">請先上傳 Excel 或 CSV 名單，再輸入獎品名稱與抽取人數。系統會從名單中隨機抽出得獎者。</p>
+
+        <div class="status">
+          <strong id="rosterSummary">尚未上傳名單</strong>
+          <p id="rosterDetail" class="hint">支援 .xlsx、.xls、.csv。系統會讀取第一個工作表，並優先使用「姓名」欄位。</p>
+        </div>
+
         <div id="sourceBox" class="source">
-          <label>GitHub Excel raw URL<input id="sourceUrl" type="url" placeholder="https://raw.githubusercontent.com/帳號/repo/main/名單.xlsx" autocomplete="off"></label>
-          <button id="loadBtn" class="btn secondary" type="button">載入名單</button>
-          <p class="hint">正式使用時，請在程式碼上方的 <strong>CONFIG.rosterUrl</strong> 填入固定 Excel raw URL。</p>
+          <label>
+            上傳 Excel / CSV 名單
+            <input id="fileInput" type="file" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv">
+          </label>
+          <p class="hint">檔案只會在目前瀏覽器本機解析，不會上傳到 GitHub 或其他伺服器。</p>
         </div>
+
         <div class="fields">
-          <label>獎品名稱<input id="prize" type="text" placeholder="例如：頭獎、禮券、咖啡券" maxlength="40"></label>
-          <label>抽取人數<input id="count" type="number" min="1" step="1" value="1"></label>
+          <label>
+            獎品名稱
+            <input id="prize" type="text" placeholder="例如：頭獎、禮券、咖啡券" maxlength="40">
+          </label>
+          <label>
+            抽取人數
+            <input id="count" type="number" min="1" step="1" value="1">
+          </label>
         </div>
+
         <div class="actions">
           <button id="draw" class="btn primary" type="button" disabled>開始抽獎</button>
           <button id="reset" class="btn secondary" type="button">重設本場</button>
           <button id="clear" class="btn warning" type="button">清除紀錄</button>
         </div>
+
         <p class="hint">同一場抽獎中，已得獎者不會再次被抽到。按「重設本場」可重新開放所有名單。</p>
       </section>
+
       <section class="stage" aria-labelledby="winnerTitle">
-        <div class="stage-head"><div><p class="kicker">Winners</p><h2 id="winnerTitle">得獎名單</h2></div><span id="prizeLabel" class="prize">尚未抽獎</span></div>
+        <div class="stage-head">
+          <div>
+            <p class="kicker">Winners</p>
+            <h2 id="winnerTitle">得獎名單</h2>
+          </div>
+          <span id="prizeLabel" class="prize">尚未抽獎</span>
+        </div>
+
         <div id="winners" class="winners"></div>
-        <div id="empty" class="empty"><div><div class="ticket">抽</div><p class="hint">名單載入後，輸入獎品與人數，再按下開始抽獎。得獎者會顯示在這裡。</p></div></div>
+
+        <div id="empty" class="empty">
+          <div>
+            <div class="ticket">抽</div>
+            <p class="hint">上傳名單後，輸入獎品與人數，再按下開始抽獎。得獎者會顯示在這裡。</p>
+          </div>
+        </div>
       </section>
+
       <section class="history" aria-labelledby="historyTitle">
-        <div class="history-head"><div><p class="kicker">History</p><h2 id="historyTitle">本機抽獎紀錄</h2></div><p class="hint">紀錄只存在目前瀏覽器，不會寫回 GitHub。</p></div>
+        <div class="history-head">
+          <div>
+            <p class="kicker">History</p>
+            <h2 id="historyTitle">本機抽獎紀錄</h2>
+          </div>
+          <p class="hint">紀錄只存在目前瀏覽器，不會寫回 GitHub。</p>
+        </div>
         <div id="history" class="history-list"></div>
       </section>
     </main>
   </div>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
   <script>
     const CONFIG = {
-      rosterUrl: "",
       sheetName: "",
       nameColumns: ["姓名", "名字", "Name", "name", "中文姓名", "參加者", "員工姓名"],
       idColumns: ["Email", "email", "信箱", "編號", "員工編號", "學號", "ID", "id"]
     };
+
     const demoRoster = [
       { name: "王小明", meta: "產品部", key: "demo-1" },
       { name: "陳怡君", meta: "設計部", key: "demo-2" },
@@ -68,30 +432,406 @@
       { name: "許哲維", meta: "資料組", key: "demo-7" },
       { name: "吳佳穎", meta: "專案組", key: "demo-8" }
     ];
-    const state = { roster: [], drawn: new Set(), history: loadHistory(), demo: false };
+
+    const state = {
+      roster: [],
+      drawn: new Set(),
+      history: loadHistory(),
+      demo: false
+    };
+
     const $ = (id) => document.getElementById(id);
-    const el = { dot: $("dot"), sourceText: $("sourceText"), rosterSummary: $("rosterSummary"), rosterDetail: $("rosterDetail"), sourceBox: $("sourceBox"), sourceUrl: $("sourceUrl"), loadBtn: $("loadBtn"), prize: $("prize"), count: $("count"), draw: $("draw"), reset: $("reset"), clear: $("clear"), prizeLabel: $("prizeLabel"), winners: $("winners"), empty: $("empty"), history: $("history"), toast: $("toast"), canvas: $("confetti") };
+
+    const el = {
+      dot: $("dot"),
+      sourceText: $("sourceText"),
+      rosterSummary: $("rosterSummary"),
+      rosterDetail: $("rosterDetail"),
+      fileInput: $("fileInput"),
+      prize: $("prize"),
+      count: $("count"),
+      draw: $("draw"),
+      reset: $("reset"),
+      clear: $("clear"),
+      prizeLabel: $("prizeLabel"),
+      winners: $("winners"),
+      empty: $("empty"),
+      history: $("history"),
+      toast: $("toast"),
+      canvas: $("confetti")
+    };
+
     const confetti = makeConfetti(el.canvas);
+
     init();
-    async function init(){renderHistory();bind();if(CONFIG.rosterUrl){el.sourceUrl.value=CONFIG.rosterUrl;await loadRoster(CONFIG.rosterUrl);return;}state.roster=demoRoster;state.demo=true;el.sourceBox.classList.add("show");setRosterUi("ready","使用示範名單","目前載入 8 筆示範資料。填入 GitHub Excel raw URL 後可改讀正式名單。");updateDraw();}
-    function bind(){el.loadBtn.addEventListener("click",()=>loadRoster(el.sourceUrl.value));el.sourceUrl.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();loadRoster(el.sourceUrl.value);}});el.draw.addEventListener("click",drawWinners);el.reset.addEventListener("click",resetSession);el.clear.addEventListener("click",clearHistory);el.prize.addEventListener("input",updateDraw);el.count.addEventListener("input",updateDraw);}
-    async function loadRoster(input){const url=toRawUrl(String(input||"").trim());if(!url){toast("請先填入 GitHub Excel raw URL。");return;}try{setRosterUi("loading","正在讀取 Excel","下載並解析 GitHub 上的名單檔案。");el.draw.disabled=true;if(!window.XLSX)throw new Error("Excel parser is not ready. Please check the SheetJS CDN connection.");const res=await fetch(url,{cache:"no-store"});if(!res.ok)throw new Error(`下載失敗，HTTP ${res.status}`);const buffer=await res.arrayBuffer();const wb=XLSX.read(buffer,{type:"array"});const sheetName=CONFIG.sheetName||wb.SheetNames[0];const sheet=wb.Sheets[sheetName];if(!sheet)throw new Error("找不到指定工作表，請確認 CONFIG.sheetName。");const rows=XLSX.utils.sheet_to_json(sheet,{defval:"",raw:false});const roster=normalizeRows(rows);if(!roster.length)throw new Error("Excel 內找不到可抽獎的姓名資料。");state.roster=roster;state.drawn.clear();state.demo=false;setRosterUi("ready",`已載入 ${roster.length} 筆名單`,`來源：${url}`);updateDraw();toast("名單載入完成。");}catch(err){setRosterUi("error","名單載入失敗",err.message);updateDraw();toast(err.message);}}
-    function normalizeRows(rows){if(!Array.isArray(rows)||!rows.length)return[];const cols=Object.keys(rows[0]||{});const nameCol=findCol(cols,CONFIG.nameColumns)||cols[0];const idCol=findCol(cols,CONFIG.idColumns);const seen=new Set();return rows.map((row,i)=>{const name=String(row[nameCol]||"").trim();if(!name)return null;const id=idCol?String(row[idCol]||"").trim():"";const key=id||`${name}-${i}`;if(seen.has(key))return null;seen.add(key);const meta=cols.filter(c=>c!==nameCol&&c!==idCol).map(c=>String(row[c]||"").trim()).filter(Boolean).slice(0,2).join(" / ");return{name,meta,key};}).filter(Boolean);}
-    function findCol(cols,candidates){const map=new Map(cols.map(c=>[String(c).trim().toLowerCase(),c]));for(const c of candidates){const hit=map.get(String(c).trim().toLowerCase());if(hit)return hit;}return"";}
-    function toRawUrl(url){const m=url.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)$/);return m?`https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3]}/${m[4]}`:url;}
-    function drawWinners(){const prize=el.prize.value.trim();const count=parseInt(el.count.value,10);const available=state.roster.filter(p=>!state.drawn.has(p.key));if(!prize){toast("請先輸入獎品名稱。");el.prize.focus();return;}if(!Number.isFinite(count)||count<1){toast("抽取人數至少要是 1。");el.count.focus();return;}if(!available.length){toast("本場名單都已經抽完，請先重設本場。");return;}if(count>available.length){toast(`目前只剩 ${available.length} 人可抽。`);el.count.value=available.length;return;}const winners=shuffle(available).slice(0,count);winners.forEach(p=>state.drawn.add(p.key));renderWinners(winners,prize);addHistory(prize,winners);updateDraw();confetti.burst();}
-    function shuffle(list){const out=[...list];const values=new Uint32Array(out.length);if(window.crypto&&crypto.getRandomValues)crypto.getRandomValues(values);else for(let i=0;i<values.length;i++)values[i]=Math.floor(Math.random()*4294967295);for(let i=out.length-1;i>0;i--){const j=values[i]%(i+1);[out[i],out[j]]=[out[j],out[i]];}return out;}
-    function renderWinners(winners,prize){el.empty.style.display="none";el.winners.innerHTML="";el.prizeLabel.textContent=prize;winners.forEach((w,i)=>{const card=document.createElement("article");card.className="winner";card.style.animationDelay=`${i*70}ms`;card.innerHTML=`<span class="rank">${i+1}</span><div><strong>${esc(w.name)}</strong><span class="meta">${esc(w.meta||"名單資料")}</span></div>`;el.winners.append(card);});}
-    function addHistory(prize,winners){const item={prize,names:winners.map(w=>w.name),time:new Date().toLocaleString("zh-TW",{hour12:false})};state.history.unshift(item);state.history=state.history.slice(0,20);localStorage.setItem("lottery-history",JSON.stringify(state.history));renderHistory();}
-    function renderHistory(){if(!state.history.length){el.history.innerHTML='<p class="hint">尚無抽獎紀錄。</p>';return;}el.history.innerHTML=state.history.map(item=>`<article class="history-item"><div><strong>${esc(item.prize)}</strong><div class="meta">${esc(item.time)}</div></div><div class="meta">${esc(item.names.join("、"))}</div></article>`).join("");}
-    function loadHistory(){try{return JSON.parse(localStorage.getItem("lottery-history")||"[]");}catch(e){return[];}}
-    function resetSession(){state.drawn.clear();el.winners.innerHTML="";el.empty.style.display="grid";el.prizeLabel.textContent="尚未抽獎";updateDraw();toast("本場抽獎已重設。");}
-    function clearHistory(){state.history=[];localStorage.removeItem("lottery-history");renderHistory();toast("本機抽獎紀錄已清除。");}
-    function updateDraw(){const available=state.roster.filter(p=>!state.drawn.has(p.key)).length;el.draw.disabled=!state.roster.length||!el.prize.value.trim()||available<1;if(state.roster.length){const mode=state.demo?"示範名單":"正式名單";el.rosterSummary.textContent=`${mode}：共 ${state.roster.length} 人，剩餘 ${available} 人可抽`;}}
-    function setRosterUi(type,summary,detail){el.dot.className=`dot ${type==="ready"?"ready":type==="error"?"error":""}`;el.sourceText.textContent=summary;el.rosterSummary.textContent=summary;el.rosterDetail.textContent=detail;}
-    function toast(msg){el.toast.textContent=msg;el.toast.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.toast.classList.remove("show"),2600);}
-    function esc(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
-    function makeConfetti(canvas){const ctx=canvas.getContext("2d");const colors=["#0f6f72","#df6b50","#c8942e","#748a5a","#20242a"];let pieces=[];let frame=0;function resize(){canvas.width=innerWidth*devicePixelRatio;canvas.height=innerHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}function burst(){resize();pieces=Array.from({length:110},()=>({x:innerWidth/2,y:innerHeight*.18,vx:(Math.random()-.5)*10,vy:Math.random()*-8-3,size:Math.random()*8+4,rot:Math.random()*Math.PI,spin:(Math.random()-.5)*.3,color:colors[Math.floor(Math.random()*colors.length)],life:Math.random()*70+70}));cancelAnimationFrame(frame);animate();}function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);pieces=pieces.map(p=>({x:p.x+p.vx,y:p.y+p.vy,vx:p.vx,vy:p.vy+.18,size:p.size,rot:p.rot+p.spin,spin:p.spin,color:p.color,life:p.life-1})).filter(p=>p.life>0&&p.y<innerHeight+30);for(const p of pieces){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.globalAlpha=Math.max(p.life/80,0);ctx.fillStyle=p.color;ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*.55);ctx.restore();}if(pieces.length)frame=requestAnimationFrame(animate);}addEventListener("resize",resize);resize();return{burst};}
+
+    function init(){
+      renderHistory();
+      bind();
+      state.roster = demoRoster;
+      state.demo = true;
+      setRosterUi(
+        "ready",
+        "目前使用示範名單",
+        "已載入 8 筆示範資料。上傳 Excel 或 CSV 後，會改用正式名單。"
+      );
+      updateDraw();
+    }
+
+    function bind(){
+      el.fileInput.addEventListener("change", e => {
+        const file = e.target.files && e.target.files[0];
+        if(file){
+          loadRosterFile(file);
+        }
+      });
+
+      el.draw.addEventListener("click", drawWinners);
+      el.reset.addEventListener("click", resetSession);
+      el.clear.addEventListener("click", clearHistory);
+      el.prize.addEventListener("input", updateDraw);
+      el.count.addEventListener("input", updateDraw);
+    }
+
+    async function loadRosterFile(file){
+      try{
+        validateFile(file);
+        setRosterUi("loading", "正在讀取名單", `檔案名稱：${file.name}`);
+        el.draw.disabled = true;
+
+        if(!window.XLSX){
+          throw new Error("Excel 解析器尚未載入，請確認網路是否可連線到 SheetJS CDN。");
+        }
+
+        const buffer = await file.arrayBuffer();
+        const wb = XLSX.read(buffer, { type: "array" });
+        const sheetName = CONFIG.sheetName || wb.SheetNames[0];
+        const sheet = wb.Sheets[sheetName];
+
+        if(!sheet){
+          throw new Error("找不到指定工作表，請確認 Excel 是否有工作表。");
+        }
+
+        const rows = XLSX.utils.sheet_to_json(sheet, {
+          defval: "",
+          raw: false
+        });
+
+        const roster = normalizeRows(rows);
+
+        if(!roster.length){
+          throw new Error("Excel 內找不到可抽獎的姓名資料。請確認有「姓名」欄位，或第一欄是姓名。");
+        }
+
+        state.roster = roster;
+        state.drawn.clear();
+        state.demo = false;
+
+        el.winners.innerHTML = "";
+        el.empty.style.display = "grid";
+        el.prizeLabel.textContent = "尚未抽獎";
+
+        setRosterUi(
+          "ready",
+          `已載入 ${roster.length} 筆名單`,
+          `來源檔案：${file.name}；工作表：${sheetName}`
+        );
+
+        updateDraw();
+        toast("名單載入完成。");
+      }catch(err){
+        setRosterUi("error", "名單載入失敗", err.message);
+        updateDraw();
+        toast(err.message);
+      }
+    }
+
+    function validateFile(file){
+      const maxSizeMB = 10;
+      const validExt = /\.(xlsx|xls|csv)$/i;
+
+      if(!validExt.test(file.name)){
+        throw new Error("檔案格式不支援，請上傳 .xlsx、.xls 或 .csv。");
+      }
+
+      if(file.size > maxSizeMB * 1024 * 1024){
+        throw new Error(`檔案過大，請上傳 ${maxSizeMB}MB 以下的名單檔案。`);
+      }
+    }
+
+    function normalizeRows(rows){
+      if(!Array.isArray(rows) || !rows.length){
+        return [];
+      }
+
+      const cols = Object.keys(rows[0] || {});
+      const nameCol = findCol(cols, CONFIG.nameColumns) || cols[0];
+      const idCol = findCol(cols, CONFIG.idColumns);
+      const seen = new Set();
+
+      return rows.map((row, i) => {
+        const name = String(row[nameCol] || "").trim();
+        if(!name){
+          return null;
+        }
+
+        const id = idCol ? String(row[idCol] || "").trim() : "";
+        const key = id || `${name}-${i}`;
+
+        if(seen.has(key)){
+          return null;
+        }
+
+        seen.add(key);
+
+        const meta = cols
+          .filter(c => c !== nameCol && c !== idCol)
+          .map(c => String(row[c] || "").trim())
+          .filter(Boolean)
+          .slice(0, 2)
+          .join(" / ");
+
+        return { name, meta, key };
+      }).filter(Boolean);
+    }
+
+    function findCol(cols, candidates){
+      const map = new Map(cols.map(c => [String(c).trim().toLowerCase(), c]));
+      for(const c of candidates){
+        const hit = map.get(String(c).trim().toLowerCase());
+        if(hit){
+          return hit;
+        }
+      }
+      return "";
+    }
+
+    function drawWinners(){
+      const prize = el.prize.value.trim();
+      const count = parseInt(el.count.value, 10);
+      const available = state.roster.filter(p => !state.drawn.has(p.key));
+
+      if(!prize){
+        toast("請先輸入獎品名稱。");
+        el.prize.focus();
+        return;
+      }
+
+      if(!Number.isFinite(count) || count < 1){
+        toast("抽取人數至少要是 1。");
+        el.count.focus();
+        return;
+      }
+
+      if(!available.length){
+        toast("本場名單都已經抽完，請先重設本場。");
+        return;
+      }
+
+      if(count > available.length){
+        toast(`目前只剩 ${available.length} 人可抽。`);
+        el.count.value = available.length;
+        return;
+      }
+
+      const winners = shuffle(available).slice(0, count);
+      winners.forEach(p => state.drawn.add(p.key));
+      renderWinners(winners, prize);
+      addHistory(prize, winners);
+      updateDraw();
+      confetti.burst();
+    }
+
+    function shuffle(list){
+      const out = [...list];
+      const values = new Uint32Array(out.length);
+
+      if(window.crypto && crypto.getRandomValues){
+        crypto.getRandomValues(values);
+      }else{
+        for(let i = 0; i < values.length; i++){
+          values[i] = Math.floor(Math.random() * 4294967295);
+        }
+      }
+
+      for(let i = out.length - 1; i > 0; i--){
+        const j = values[i] % (i + 1);
+        [out[i], out[j]] = [out[j], out[i]];
+      }
+
+      return out;
+    }
+
+    function renderWinners(winners, prize){
+      el.empty.style.display = "none";
+      el.winners.innerHTML = "";
+      el.prizeLabel.textContent = prize;
+
+      winners.forEach((w, i) => {
+        const card = document.createElement("article");
+        card.className = "winner";
+        card.style.animationDelay = `${i * 70}ms`;
+        card.innerHTML = `
+          <span class="rank">${i + 1}</span>
+          <div>
+            <strong>${esc(w.name)}</strong>
+            <span class="meta">${esc(w.meta || "名單資料")}</span>
+          </div>
+        `;
+        el.winners.append(card);
+      });
+    }
+
+    function addHistory(prize, winners){
+      const item = {
+        prize,
+        names: winners.map(w => w.name),
+        time: new Date().toLocaleString("zh-TW", { hour12:false })
+      };
+
+      state.history.unshift(item);
+      state.history = state.history.slice(0, 20);
+      localStorage.setItem("lottery-history", JSON.stringify(state.history));
+      renderHistory();
+    }
+
+    function renderHistory(){
+      if(!state.history.length){
+        el.history.innerHTML = '<p class="hint">尚無抽獎紀錄。</p>';
+        return;
+      }
+
+      el.history.innerHTML = state.history.map(item => `
+        <article class="history-item">
+          <div>
+            <strong>${esc(item.prize)}</strong>
+            <div class="meta">${esc(item.time)}</div>
+          </div>
+          <div class="meta">${esc(item.names.join("、"))}</div>
+        </article>
+      `).join("");
+    }
+
+    function loadHistory(){
+      try{
+        return JSON.parse(localStorage.getItem("lottery-history") || "[]");
+      }catch(e){
+        return [];
+      }
+    }
+
+    function resetSession(){
+      state.drawn.clear();
+      el.winners.innerHTML = "";
+      el.empty.style.display = "grid";
+      el.prizeLabel.textContent = "尚未抽獎";
+      updateDraw();
+      toast("本場抽獎已重設。");
+    }
+
+    function clearHistory(){
+      state.history = [];
+      localStorage.removeItem("lottery-history");
+      renderHistory();
+      toast("本機抽獎紀錄已清除。");
+    }
+
+    function updateDraw(){
+      const available = state.roster.filter(p => !state.drawn.has(p.key)).length;
+      el.draw.disabled = !state.roster.length || !el.prize.value.trim() || available < 1;
+
+      if(state.roster.length){
+        const mode = state.demo ? "示範名單" : "正式名單";
+        el.rosterSummary.textContent = `${mode}：共 ${state.roster.length} 人，剩餘 ${available} 人可抽`;
+      }
+    }
+
+    function setRosterUi(type, summary, detail){
+      el.dot.className = `dot ${type === "ready" ? "ready" : type === "error" ? "error" : ""}`;
+      el.sourceText.textContent = summary;
+      el.rosterSummary.textContent = summary;
+      el.rosterDetail.textContent = detail;
+    }
+
+    function toast(msg){
+      el.toast.textContent = msg;
+      el.toast.classList.add("show");
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => el.toast.classList.remove("show"), 2600);
+    }
+
+    function esc(v){
+      return String(v)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function makeConfetti(canvas){
+      const ctx = canvas.getContext("2d");
+      const colors = ["#0f6f72", "#df6b50", "#c8942e", "#748a5a", "#20242a"];
+      let pieces = [];
+      let frame = 0;
+
+      function resize(){
+        canvas.width = innerWidth * devicePixelRatio;
+        canvas.height = innerHeight * devicePixelRatio;
+        ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+      }
+
+      function burst(){
+        resize();
+        pieces = Array.from({ length:110 }, () => ({
+          x: innerWidth / 2,
+          y: innerHeight * .18,
+          vx: (Math.random() - .5) * 10,
+          vy: Math.random() * -8 - 3,
+          size: Math.random() * 8 + 4,
+          rot: Math.random() * Math.PI,
+          spin: (Math.random() - .5) * .3,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          life: Math.random() * 70 + 70
+        }));
+
+        cancelAnimationFrame(frame);
+        animate();
+      }
+
+      function animate(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces = pieces.map(p => ({
+          x: p.x + p.vx,
+          y: p.y + p.vy,
+          vx: p.vx,
+          vy: p.vy + .18,
+          size: p.size,
+          rot: p.rot + p.spin,
+          spin: p.spin,
+          color: p.color,
+          life: p.life - 1
+        })).filter(p => p.life > 0 && p.y < innerHeight + 30);
+
+        for(const p of pieces){
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.globalAlpha = Math.max(p.life / 80, 0);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * .55);
+          ctx.restore();
+        }
+
+        if(pieces.length){
+          frame = requestAnimationFrame(animate);
+        }
+      }
+
+      addEventListener("resize", resize);
+      resize();
+      return { burst };
+    }
   </script>
 </body>
 </html>
